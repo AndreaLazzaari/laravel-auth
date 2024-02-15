@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            $table->string('title', 255);
+            $table->text('request');
+            $table->date('date');
+            $table->string('author', 50);
             $table->timestamps();
         });
     }
@@ -20,8 +24,8 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-        Schema::dropIfExists('projects');
-    }
+    // public function down(): void
+    // {
+    //     Schema::dropIfExists('projects');
+    // }
 };
