@@ -8,6 +8,14 @@ use App\Models\Project;
 
 class ProjectController extends Controller
 {
+
+    private $rules = [
+        'title' => ['required', 'min:3', 'string', 'max:255'],
+        'author' => ['required', 'min:3', 'string', 'max:40'],
+        'request' => ['min:20', 'required'],
+        'date' => ['date', 'required'],
+    ];
+
     /**
      * Display a listing of the resource.
      */
@@ -30,9 +38,17 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        $project = Project::all($data);
-        return redirect() -> route('admin.projects.show', $project);
+        // $data = $request->all();
+        // $project = Project::all($data);
+        // return redirect() -> route('admin.projects.show', $project);
+
+
+        $data = $request->validate($this->rules);
+
+
+        $project = Project::create($data);
+
+        return redirect()->route('admin.projects.show', $project);
     }
 
     /**
@@ -46,24 +62,28 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Project $project)
     {
-        //
+        return view('admin.projects.edit', compact('project'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Project $project)
     {
-        //
+        $data = $request->validate($this->rules);
+        $project->update($data);
+
+        return redirect()->route('admin.projects.show', $project);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Project $project)
     {
-        //
+        $project->delete();
+        return redirect()->route('admin.projects.index');
     }
 }
